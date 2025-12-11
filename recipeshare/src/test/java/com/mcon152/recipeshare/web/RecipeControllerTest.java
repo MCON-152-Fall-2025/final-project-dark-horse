@@ -61,7 +61,7 @@ class RecipeControllerTest {
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         // Reset interactions before each test for clean verifications:
-        clearInvocations(recipeService)
+        clearInvocations(recipeService);
     }
 
     // ---------------------- Creation Tests ----------------------
