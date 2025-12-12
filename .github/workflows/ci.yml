@@ -20,5 +20,8 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Add Artifact
+        run: mvn -f recipeshare/pom.xml package 
+
       - name: Run tests
         run: mvn -f recipeshare/pom.xml -ntp -B test
