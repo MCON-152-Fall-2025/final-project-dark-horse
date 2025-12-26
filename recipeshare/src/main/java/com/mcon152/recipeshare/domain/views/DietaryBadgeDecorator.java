@@ -1,7 +1,7 @@
 package com.mcon152.recipeshare.domain.views;
 import com.mcon152.recipeshare.domain.Recipe;
-import com.mcon152.recipeshare.domain.Vegetarian;
-import com.mcon152.recipeshare.domain.Dairy;
+import com.mcon152.recipeshare.domain.VegetarianRecipe;
+import com.mcon152.recipeshare.domain.DairyRecipe;
 
 public class DietaryBadgeDecorator implements RecipeView {
     private final RecipeView wrappedView;
