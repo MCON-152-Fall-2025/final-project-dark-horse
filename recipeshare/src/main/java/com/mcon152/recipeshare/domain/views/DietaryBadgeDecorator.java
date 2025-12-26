@@ -17,10 +17,10 @@ public class DietaryBadgeDecorator implements RecipeView {
     @Override public String getDisplayName() {
         String name = wrappedView.getDisplayName();
         Recipe recipe = wrappedView.getRecipe();
-        if (recipe instanceof Vegetarian) {
+        if (recipe instanceof VegetarianRecipe) {
             return name + " [Vegetarian]";
         }
-        if (recipe instanceof Dairy) {
+        if (recipe instanceof DairyRecipe) {
             return name + " [Dairy]";
         }
         return name;
