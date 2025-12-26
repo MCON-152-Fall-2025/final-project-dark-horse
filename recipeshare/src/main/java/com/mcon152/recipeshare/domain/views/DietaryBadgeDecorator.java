@@ -2,21 +2,24 @@ package com.mcon152.recipeshare.domain.views;
 
 import com.mcon152.recipeshare.domain.Recipe;
 
-import java.util.List;
+import com.mcon152.recipeshare.domain.recipes.Vegetarian;
+
+import com.mcon152.recipeshare.domain.recipes.Dairy;
 
 public class DietaryBadgeDecorator implements RecipeView {
     private final RecipeView wrappedView;
-    public DietaryBadgeDecorator(RecipeView wrappedView, Recipe recipe) {
+
+    public DietaryBadgeDecorator(RecipeView wrappedView) {
         this.wrappedView = wrappedView;
     }
 
     @Override public Recipe getRecipe() {
-        return wrapped.getRecipe();
+        return wrappedView.getRecipe();
     }
 
     @Override public String getDisplayName() {
-        String name = wrapped.getDisplayName();
-        Recipe recipe = wrapped.getRecipe();
+        String name = wrappedView.getDisplayName();
+        Recipe recipe = wrappedView.getRecipe();
         if (recipe instanceof Vegetarian) {
             return name + " [Vegetarian]";
         }
@@ -27,11 +30,10 @@ public class DietaryBadgeDecorator implements RecipeView {
     }
 
     @Override public String getDescription() {
-        return wrapped.getDescription();
+        return wrappedView.getDescription();
     }
 
     @Override public String getIngredients() {
-        return wrapped.getIngredients();
+        return wrappedView.getIngredients();
     }
-
 }
