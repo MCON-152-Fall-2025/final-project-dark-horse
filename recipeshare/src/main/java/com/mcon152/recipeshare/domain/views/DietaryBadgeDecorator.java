@@ -2,7 +2,7 @@ package com.mcon152.recipeshare.domain.views;
 
 import com.mcon152.recipeshare.domain.Recipe;
 
-package com.mcon152.recipeshare.domain.Vegetarian;
+import com.mcon152.recipeshare.domain.Vegetarian;
 
 import com.mcon152.recipeshare.domain.Dairy;
 
