@@ -66,28 +66,31 @@ public class RecipeController {
      * Retrieve a recipe by id. 200 OK or 404 Not Found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RecipeView> getRecipeById(@PathVariable long id) {
-            logger.info("Received request to get recipe by ID: {}", id);
+    public ResponseEntity<Recipe> getRecipeById(@PathVariable long id) {
+        logger.info("Received request to get recipe by ID: {}", id);
+        return recipeService.getRecipeById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/{id}/view")
+    public ResponseEntity<RecipeView> getRecipeView(@PathVariable long id) {
+        logger.info("Received request to get recipe view for ID: {}", id);
 
-            return recipeService.getRecipeById(id)
-                    .map(recipe -> {
+        return recipeService.getRecipeById(id)
+                .map(recipe -> {
+                    RecipeView view = new BasicRecipeView(recipe);
 
-                        // 1. Base view
-                        RecipeView view = new BasicRecipeView(recipe);
+                    if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
+                        view = new TagBadgeDecorator(view);
+                    }
 
-                        // 2. Decorate conditionally
-                        if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
-                            view = new TagBadgeDecorator(view);
-                        }
+                    if (recipe instanceof VegetarianRecipe || recipe instanceof DairyRecipe) {
+                        view = new DietaryBadgeDecorator(view);
+                    }
 
-                        if (recipe instanceof VegetarianRecipe || recipe instanceof DairyRecipe) {
-                            view = new DietaryBadgeDecorator(view);
-                        }
-
-                        // 3. Return decorated view
-                        return ResponseEntity.ok(view);
-                    })
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(view);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
