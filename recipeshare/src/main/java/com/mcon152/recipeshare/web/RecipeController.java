@@ -1,7 +1,13 @@
 package com.mcon152.recipeshare.web;
 
+import com.mcon152.recipeshare.domain.DairyRecipe;
 import com.mcon152.recipeshare.domain.Recipe;
 import com.mcon152.recipeshare.domain.RecipeRegistry;
+import com.mcon152.recipeshare.domain.VegetarianRecipe;
+import com.mcon152.recipeshare.domain.views.BasicRecipeView;
+import com.mcon152.recipeshare.domain.views.DietaryBadgeDecorator;
+import com.mcon152.recipeshare.domain.views.RecipeView;
+import com.mcon152.recipeshare.domain.views.TagBadgeDecorator;
 import com.mcon152.recipeshare.service.RecipeService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -60,11 +66,28 @@ public class RecipeController {
      * Retrieve a recipe by id. 200 OK or 404 Not Found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipeById(@PathVariable long id) {
-        logger.info("Received request to get recipe by ID: {}", id);
-        return recipeService.getRecipeById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<RecipeView> getRecipeById(@PathVariable long id) {
+            logger.info("Received request to get recipe by ID: {}", id);
+
+            return recipeService.getRecipeById(id)
+                    .map(recipe -> {
+
+                        // 1. Base view
+                        RecipeView view = new BasicRecipeView(recipe);
+
+                        // 2. Decorate conditionally
+                        if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
+                            view = new TagBadgeDecorator(view);
+                        }
+
+                        if (recipe instanceof VegetarianRecipe || recipe instanceof DairyRecipe) {
+                            view = new DietaryBadgeDecorator(view);
+                        }
+
+                        // 3. Return decorated view
+                        return ResponseEntity.ok(view);
+                    })
+                    .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
