@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "tags")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "recipes", "description", "id", "createdAt", "updatedAt"})
-public class Tag extends BaseEntity {
+public class Tag extends BaseEntity implements Comparable<Tag> {
 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
@@ -98,5 +98,10 @@ public class Tag extends BaseEntity {
                 ", description='" + description + '\'' +
                 ", recipeCount=" + recipes.size() +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Tag tag) {
+        return this.name.compareTo(tag.getName());
     }
 }

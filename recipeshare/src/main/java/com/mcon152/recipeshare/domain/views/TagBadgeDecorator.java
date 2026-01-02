@@ -3,7 +3,7 @@ package com.mcon152.recipeshare.domain.views;
 import com.mcon152.recipeshare.domain.Recipe;
 import com.mcon152.recipeshare.domain.Tag;
 
-import java.util.Set;
+import java.util.*;
 
 public class TagBadgeDecorator implements RecipeView{
 
@@ -36,11 +36,14 @@ public class TagBadgeDecorator implements RecipeView{
     public String getTagBadges(){
         StringBuilder badges = new StringBuilder();
         Set<Tag> tags = wrappedView.getRecipe().getTags();
-        if(tags == null){
+        if(tags == null || tags.isEmpty()){
             return "";
         }
-        for(Tag tag: tags){
-            badges.append("[").append(tag).append("]");
+        List<Tag> sortedTags = new ArrayList<>(tags);
+        Collections.sort(sortedTags);
+
+        for(Tag tag: sortedTags){
+            badges.append("[").append(tag.getName()).append("]");
         }
         return badges.toString();
     }
