@@ -1,7 +1,13 @@
 package com.mcon152.recipeshare.web;
 
+import com.mcon152.recipeshare.domain.DairyRecipe;
 import com.mcon152.recipeshare.domain.Recipe;
 import com.mcon152.recipeshare.domain.RecipeRegistry;
+import com.mcon152.recipeshare.domain.VegetarianRecipe;
+import com.mcon152.recipeshare.domain.views.BasicRecipeView;
+import com.mcon152.recipeshare.domain.views.DietaryBadgeDecorator;
+import com.mcon152.recipeshare.domain.views.RecipeView;
+import com.mcon152.recipeshare.domain.views.TagBadgeDecorator;
 import com.mcon152.recipeshare.service.RecipeService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +70,26 @@ public class RecipeController {
         logger.info("Received request to get recipe by ID: {}", id);
         return recipeService.getRecipeById(id)
                 .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/{id}/view")
+    public ResponseEntity<RecipeView> getRecipeView(@PathVariable long id) {
+        logger.info("Received request to get recipe view for ID: {}", id);
+
+        return recipeService.getRecipeById(id)
+                .map(recipe -> {
+                    RecipeView view = new BasicRecipeView(recipe);
+
+                    if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
+                        view = new TagBadgeDecorator(view);
+                    }
+
+                    if (recipe instanceof VegetarianRecipe || recipe instanceof DairyRecipe) {
+                        view = new DietaryBadgeDecorator(view);
+                    }
+
+                    return ResponseEntity.ok(view);
+                })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
