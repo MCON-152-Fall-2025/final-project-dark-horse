@@ -236,6 +236,21 @@ class RecipeControllerTest {
         }
 
         @Test
+        void testGetRecipeWithView_argThat() throws Exception {
+            long id = recipeIds.get(0);
+            mockMvc.perform(get("/api/recipes/" + id +"/view"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.displayName").value("Pie"));
+
+            // verify the exact id routed to service using captor
+            verify(recipeService).getRecipeById(idCaptor.capture());
+            assertEquals(id, idCaptor.getValue());
+
+            verify(recipeService, never()).deleteRecipe(anyLong());
+            verifyNoMoreInteractions(recipeService);
+        }
+
+        @Test
         void testDeleteRecipe_verifyOrder_andNoMore() throws Exception {
             long id = recipeIds.get(0);
             when(recipeService.deleteRecipe(id)).thenReturn(true);
