@@ -1,7 +1,7 @@
 package com.mcon152.recipeshare.domain;
 
 import com.mcon152.recipeshare.domain.views.BasicRecipeView;
-import com.mcon152.recipeshare.domain.views.DietaryBadgeDecorator;
+import com.mcon152.recipeshare.domain.views.TagBadgeDecorator;
 import com.mcon152.recipeshare.web.RecipeRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
